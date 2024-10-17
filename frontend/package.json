@@ -42,7 +42,8 @@
     "react-native-toast-message": "^2.2.1",
     "react-native-ui-lib": "^7.32.0",
     "react-native-web": "~0.19.10",
-    "tailwind-merge": "^2.5.3"
+    "tailwind-merge": "^2.5.3",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

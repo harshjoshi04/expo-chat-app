@@ -1,10 +1,14 @@
 import { useRef, useState, type RefObject } from "react";
 import { TextInput, View } from "react-native";
+import { twMerge } from "tailwind-merge";
 
-interface OTPInputProps {}
+interface OTPInputProps {
+  codes: string[] | undefined[];
+  setCodes: React.Dispatch<React.SetStateAction<string[] | undefined[]>>;
+  isSubmit: boolean;
+}
 
-export function OTPInput() {
-  const [codes, setCodes] = useState<string[] | undefined[]>(Array(4).fill(""));
+export function OTPInput({ codes, setCodes, isSubmit }: OTPInputProps) {
   const refs: RefObject<TextInput>[] = [
     useRef<TextInput>(null),
     useRef<TextInput>(null),
@@ -25,6 +29,7 @@ export function OTPInput() {
       refs[index + 1]!.current?.focus();
     }
   };
+
   return (
     <View className="flex w-full items-center  flex-row gap-4">
       {codes.map((code, index) => (
@@ -32,7 +37,14 @@ export function OTPInput() {
           key={index}
           autoComplete="one-time-code"
           enterKeyHint="next"
-          className={`text-md h-[48] w-[48] rounded-lg  border text-white border-white px-2 py-1 text-center focus:border focus:border-[#fff] `}
+          className={twMerge(
+            `text-md h-[48] w-[48] rounded-lg  border text-white border-white px-2 py-1 text-center focus:border focus:border-[#fff] `,
+            isSubmit &&
+              [0, 1, 2, 3]
+                .slice(codes.filter((e) => e).length)
+                .includes(index) &&
+              "border-red-500"
+          )}
           inputMode="numeric"
           placeholder={(index + 1).toString()}
           placeholderTextColor={"rgba(255,255,255,0.5)"}
@@ -42,8 +54,8 @@ export function OTPInput() {
           ref={refs[index]}
           onKeyPress={({ nativeEvent: { key } }) => {
             if (key === "Backspace" && index > 0) {
-              onChangeCode("", index - 1);
               refs[index - 1]!.current!.focus();
+              onChangeCode("", index - 1);
             }
           }}
         />

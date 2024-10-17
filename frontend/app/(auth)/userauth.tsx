@@ -8,10 +8,13 @@ import Button from "@/components/Button";
 import Toast from "react-native-toast-message";
 import { AxiosResponse } from "axios";
 import { sendOtpToMail } from "@/utils/api-service";
+import LoadingSkeleton from "@/components/common/LoadingSkeleton";
+import { useUserContext } from "@/context/useUser";
 
 const UserAuth = () => {
   const [email, setemail] = useState("");
   const [isSubmit, setIsSubmit] = useState(false);
+  const { setUserEmail } = useUserContext();
 
   const handleSendOtp = async () => {
     setIsSubmit(true);
@@ -24,6 +27,8 @@ const UserAuth = () => {
         text1: "Success",
         text2: "Otp Send on your mail.",
       });
+      setUserEmail(email);
+      router.replace("/(auth)/verifyEmail");
     } catch (error) {
       Toast.show({
         type: "error",
@@ -35,6 +40,7 @@ const UserAuth = () => {
   };
   return (
     <MainLayout>
+      {isSubmit && <LoadingSkeleton />}
       <TouchableOpacity onPress={() => router.back()} className="p-2 mt-2">
         <AntDesign name="arrowleft" size={24} color="#fff" />
       </TouchableOpacity>
